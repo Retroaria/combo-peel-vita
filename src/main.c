@@ -16,8 +16,29 @@
 #include <psp2kern/kernel/threadmgr.h>
 #include <psp2kern/ctrl.h>
 #include <psp2kern/power.h>
-#include <psp2kern/touch.h>
 #include <taihen.h>
+
+/* Estruturas do touch (iguais as do SDK de usuario, psp2/touch.h) */
+typedef struct {
+	SceUInt8  id;
+	SceUInt8  force;
+	SceUInt16 x;
+	SceUInt16 y;
+	SceUInt8  reserved[8];
+	SceUInt16 info;
+} TouchReport;          /* 0x10 bytes */
+
+typedef struct {
+	SceUInt64   timeStamp;
+	SceUInt32   status;
+	SceUInt32   reportNum;
+	TouchReport report[8];
+} TouchData;            /* 0x90 bytes */
+
+_Static_assert(sizeof(TouchReport) == 0x10, "TouchReport size");
+_Static_assert(sizeof(TouchData) == 0x90, "TouchData size");
+
+#define TOUCH_PORT_FRONT 0
 
 /* ------------------------------------------------------------------ */
 /* Configuracao                                                       */
@@ -100,12 +121,12 @@ static int fake_finger(SceInt64 now, int *x, int *y)
 	return 0;
 }
 
-static void patch_touch(SceUInt32 port, SceTouchData *data, int count)
+static void patch_touch(SceUInt32 port, TouchData *data, int count)
 {
 	int i, x, y, down;
 	SceInt64 now;
 
-	if (port != SCE_TOUCH_PORT_FRONT || count <= 0 || data == NULL)
+	if (port != TOUCH_PORT_FRONT || count <= 0 || data == NULL)
 		return;
 
 	if (!g_injecting) {
@@ -125,7 +146,7 @@ static void patch_touch(SceUInt32 port, SceTouchData *data, int count)
 	down = fake_finger(now, &x, &y);
 
 	for (i = 0; i < count; i++) {
-		SceTouchData *d = &data[i];
+		TouchData *d = &data[i];
 
 		if (down) {
 			d->reportNum            = 1;
@@ -140,7 +161,7 @@ static void patch_touch(SceUInt32 port, SceTouchData *data, int count)
 	}
 }
 
-static int hook_peek(SceUInt32 port, SceTouchData *data, SceUInt32 n)
+static int hook_peek(SceUInt32 port, TouchData *data, SceUInt32 n)
 {
 	int ret = TAI_CONTINUE(int, ref_peek, port, data, n);
 	if (ret > 0)
@@ -148,7 +169,7 @@ static int hook_peek(SceUInt32 port, SceTouchData *data, SceUInt32 n)
 	return ret;
 }
 
-static int hook_peek_region(SceUInt32 port, SceTouchData *data, SceUInt32 n, int region)
+static int hook_peek_region(SceUInt32 port, TouchData *data, SceUInt32 n, int region)
 {
 	int ret = TAI_CONTINUE(int, ref_peek_region, port, data, n, region);
 	if (ret > 0)
@@ -156,7 +177,7 @@ static int hook_peek_region(SceUInt32 port, SceTouchData *data, SceUInt32 n, int
 	return ret;
 }
 
-static int hook_read(SceUInt32 port, SceTouchData *data, SceUInt32 n)
+static int hook_read(SceUInt32 port, TouchData *data, SceUInt32 n)
 {
 	int ret = TAI_CONTINUE(int, ref_read, port, data, n);
 	if (ret > 0)
@@ -164,7 +185,7 @@ static int hook_read(SceUInt32 port, SceTouchData *data, SceUInt32 n)
 	return ret;
 }
 
-static int hook_read_region(SceUInt32 port, SceTouchData *data, SceUInt32 n, int region)
+static int hook_read_region(SceUInt32 port, TouchData *data, SceUInt32 n, int region)
 {
 	int ret = TAI_CONTINUE(int, ref_read_region, port, data, n, region);
 	if (ret > 0)
