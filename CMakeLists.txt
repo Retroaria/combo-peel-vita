@@ -31,6 +31,7 @@ target_link_libraries(installer
   SceAppMgr_stub
   SceAppUtil_stub
   ScePower_stub
+  SceRtc_stub
   SceLibKernel_stub
   SceIofilemgr_stub
   m

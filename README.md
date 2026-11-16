@@ -27,10 +27,15 @@ Testado para firmware **3.65 com Ensō (HENkaku)**. Precisa de "Enable Unsafe Ho
 2. Copie o `ComboPeel.vpk` para o cartão e instale pelo VitaShell (X no arquivo › Install).
 3. Abra o app **ComboPeel** e aperte **X (Instalar)**. Ele:
    - copia o plugin para `ur0:tai/combo_peel.skprx`;
-   - faz backup do `config.txt` (`config.txt.bak`);
+   - faz backup do `config.txt` com data e hora no nome
+     (ex.: `config_2026-11-16_13-14_antes-de-instalar-combopeel.bak`);
    - adiciona a linha na seção `*KERNEL`, sem duplicar.
 4. Aperte **SELECT** para reiniciar.
-5. Pode apagar a bolha do ComboPeel: o plugin continua instalado.
+5. A bolha pode ficar ou ser apagada: o plugin continua instalado nos dois casos.
+
+> **Atenção:** o botão **Desinstalar** remove o plugin. Ele não restaura backup nenhum:
+> só tira a linha do ComboPeel do `config.txt` atual e mantém todo o resto.
+> Os backups nunca são usados automaticamente; servem só para você consultar se precisar.
 
 Para remover o plugin: instale o VPK de novo, abra e aperte **Triângulo (Desinstalar)**.
 

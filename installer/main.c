@@ -11,6 +11,7 @@
 #include <psp2/io/stat.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/power.h>
+#include <psp2/rtc.h>
 #include <vita2d.h>
 
 #include <stdio.h>
@@ -28,6 +29,7 @@
 #define MAX_LINES       4096
 
 static char g_msg[4][160];
+static char g_backup[128];
 static int  g_needs_reboot = 0;
 
 static void set_msg(int i, const char *fmt, const char *arg)
@@ -286,7 +288,6 @@ static int edit_config(const char *cfg_path, int install)
 {
 	char *text, *out;
 	int len, out_len, changed;
-	char bak[64];
 	static Config c;
 
 	if (read_file(cfg_path, &text, &len) < 0) {
@@ -300,8 +301,20 @@ static int edit_config(const char *cfg_path, int install)
 	changed = install ? cfg_add_plugin(&c) : cfg_remove_plugin(&c);
 
 	if (changed) {
-		snprintf(bak, sizeof(bak), "%s.bak", cfg_path);
-		if (len > 0 && write_file(bak, text, len) < 0) {
+		/* ex.: ur0:tai/config_2026-11-16_13-14_antes-de-instalar-combopeel.bak */
+		SceDateTime t;
+		char dir[64];
+		const char *slash = strrchr(cfg_path, '/');
+		int dlen = slash ? (int)(slash - cfg_path + 1) : 0;
+		memcpy(dir, cfg_path, dlen);
+		dir[dlen] = '\0';
+		memset(&t, 0, sizeof(t));
+		sceRtcGetCurrentClockLocalTime(&t);
+		snprintf(g_backup, sizeof(g_backup),
+			"%sconfig_%04d-%02d-%02d_%02d-%02d_antes-de-%s-combopeel.bak",
+			dir, t.year, t.month, t.day, t.hour, t.minute,
+			install ? "instalar" : "desinstalar");
+		if (len > 0 && write_file(g_backup, text, len) < 0) {
 			free(text);
 			cfg_free(&c);
 			return -2;
@@ -347,11 +360,12 @@ static void do_install(void)
 
 	set_msg(0, "Plugin instalado em " PLUGIN_DST "%s", "");
 	if (r > 0)
-		set_msg(1, "Linha adicionada em %s (backup: .bak)", cfg);
+		set_msg(1, "Linha adicionada em %s", cfg);
 	else
 		set_msg(1, "%s já estava configurado.", cfg);
-	set_msg(2, "Reinicie o Vita. Depois pode apagar esta bolha:%s", "");
-	set_msg(3, "o plugin continua instalado.%s", "");
+	if (r > 0)
+		set_msg(2, "Backup: %s", g_backup);
+	set_msg(3, "Reinicie o Vita (SELECT). O plugin fica instalado mesmo se apagar a bolha.%s", "");
 	g_needs_reboot = 1;
 }
 
@@ -369,8 +383,10 @@ static void do_uninstall(void)
 
 	set_msg(0, "Plugin removido.%s", "");
 	if (r > 0)
-		set_msg(1, "Linha removida de %s (backup: .bak)", cfg);
-	set_msg(2, "Reinicie o Vita para concluir.%s", "");
+		set_msg(1, "Linha removida de %s", cfg);
+	if (r > 0)
+		set_msg(2, "Backup: %s", g_backup);
+	set_msg(3, "Reinicie o Vita (SELECT) para concluir.%s", "");
 	g_needs_reboot = 1;
 }
 
@@ -428,14 +444,14 @@ int main(void)
 			installed ? "instalado" : "não instalado");
 
 		vita2d_pgf_draw_text(font, 40, 250, WHITE, 1.1f, "X          Instalar / atualizar");
-		vita2d_pgf_draw_text(font, 40, 285, WHITE, 1.1f, "Triângulo  Desinstalar");
+		vita2d_pgf_draw_text(font, 40, 285, WHITE, 1.1f, "Triângulo  Desinstalar (remove o plugin)");
 		if (g_needs_reboot)
 			vita2d_pgf_draw_text(font, 40, 320, YELLOW, 1.1f, "SELECT     Reiniciar o Vita agora");
 		vita2d_pgf_draw_text(font, 40, 355, WHITE, 1.1f, "START      Sair");
 
 		for (int i = 0; i < 4; i++)
 			if (g_msg[i][0])
-				vita2d_pgf_draw_text(font, 40, 420 + i * 30, i == 0 ? GREEN : WHITE, 1.0f, g_msg[i]);
+				vita2d_pgf_draw_text(font, 40, 410 + i * 30, i == 0 ? GREEN : WHITE, 0.9f, g_msg[i]);
 
 		vita2d_end_drawing();
 		vita2d_swap_buffers();
