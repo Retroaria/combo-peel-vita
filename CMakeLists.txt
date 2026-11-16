@@ -13,7 +13,7 @@ include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 set(VITA_APP_NAME  "ComboPeel")
 set(VITA_TITLEID   "CPEL00001")
-set(VITA_VERSION   "01.00")
+set(VITA_VERSION   "01.10")
 
 # ---------------- Instalador (VPK) ----------------
 add_executable(installer installer/main.c)
@@ -48,6 +48,8 @@ target_link_libraries(combo_peel
   SceThreadmgrForDriver_stub
   SceCtrlForDriver_stub
   ScePowerForDriver_stub
+  SceSysclibForDriver_stub
+  SceIofilemgrForDriver_stub
   gcc
 )
 vita_create_self(combo_peel.skprx combo_peel CONFIG exports.yml UNSAFE)

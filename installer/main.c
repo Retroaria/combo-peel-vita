@@ -433,7 +433,7 @@ int main(void)
 		vita2d_start_drawing();
 		vita2d_clear_screen();
 
-		vita2d_pgf_draw_text(font, 40, 60, WHITE, 1.6f, "ComboPeel - Instalador");
+		vita2d_pgf_draw_text(font, 40, 60, WHITE, 1.6f, "ComboPeel - Instalador  v1.1 (diagnóstico)");
 		vita2d_pgf_draw_text(font, 40, 100, GRAY, 1.0f,
 			"Desbloqueia a tela de bloqueio com: analógico esquerdo para baixo + X");
 
