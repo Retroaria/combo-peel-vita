@@ -29,7 +29,7 @@
 #define MAX_LINES       4096
 
 static char g_msg[4][160];
-static char g_backup[128];
+static char g_backup[192];
 static int  g_needs_reboot = 0;
 
 static void set_msg(int i, const char *fmt, const char *arg)
@@ -433,7 +433,7 @@ int main(void)
 		vita2d_start_drawing();
 		vita2d_clear_screen();
 
-		vita2d_pgf_draw_text(font, 40, 60, WHITE, 1.6f, "ComboPeel - Instalador  v1.1 (diagnóstico)");
+		vita2d_pgf_draw_text(font, 40, 60, WHITE, 1.6f, "ComboPeel - Instalador  v1.1");
 		vita2d_pgf_draw_text(font, 40, 100, GRAY, 1.0f,
 			"Desbloqueia a tela de bloqueio com: analógico esquerdo para baixo + X");
 
