@@ -15,19 +15,6 @@ set(VITA_APP_NAME  "ComboPeel")
 set(VITA_TITLEID   "CPEL00001")
 set(VITA_VERSION   "01.00")
 
-# ---------------- Plugin de kernel ----------------
-add_executable(combo_peel src/main.c)
-target_compile_options(combo_peel PRIVATE -Wall -O2 -std=gnu99)
-set_target_properties(combo_peel PROPERTIES LINK_FLAGS "-Wl,-q -nostdlib")
-target_link_libraries(combo_peel
-  taihenForKernel_stub
-  SceThreadmgrForDriver_stub
-  SceCtrlForDriver_stub
-  ScePowerForDriver_stub
-  gcc
-)
-vita_create_self(combo_peel.skprx combo_peel CONFIG exports.yml UNSAFE)
-
 # ---------------- Instalador (VPK) ----------------
 add_executable(installer installer/main.c)
 target_compile_options(installer PRIVATE -Wall -O2 -std=gnu99)
@@ -49,6 +36,24 @@ target_link_libraries(installer
   m
 )
 vita_create_self(eboot.bin installer UNSAFE)
+
+
+# ---------------- Plugin de kernel ----------------
+add_executable(combo_peel src/main.c)
+target_compile_options(combo_peel PRIVATE -Wall -O2 -std=gnu99)
+set_target_properties(combo_peel PROPERTIES LINK_FLAGS "-Wl,-q -nostdlib")
+target_link_libraries(combo_peel
+  taihenForKernel_stub
+  SceThreadmgrForDriver_stub
+  SceCtrlForDriver_stub
+  ScePowerForDriver_stub
+  gcc
+)
+vita_create_self(combo_peel.skprx combo_peel CONFIG exports.yml UNSAFE)
+
+
+# Obs.: o instalador vem antes do plugin porque o CONFIG do
+# vita_create_self do plugin "vaza" para chamadas seguintes.
 
 vita_create_vpk(ComboPeel.vpk ${VITA_TITLEID} eboot.bin
   VERSION ${VITA_VERSION}
