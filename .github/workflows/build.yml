@@ -23,4 +23,6 @@ jobs:
       - uses: actions/upload-artifact@v5
         with:
           name: ComboPeel
-          path: build/combo_peel.skprx
+          path: |
+            build/ComboPeel.vpk
+            build/combo_peel.skprx
