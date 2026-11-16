@@ -18,7 +18,7 @@ jobs:
       - name: Compilar
         run: |
           cmake -S . -B build
-          cmake --build build -- VERBOSE=1
+          cmake --build build
 
       - uses: actions/upload-artifact@v5
         with:

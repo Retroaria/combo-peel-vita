@@ -19,23 +19,26 @@ fazendo a mesma animação de "descascar" (peel) do gesto com o dedo.
 - Se você tocar na tela, o combo é desativado até a próxima vez que o Vita dormir.
 - É preciso apertar o combo (não adianta já estar segurando quando a tela acende).
 
-## Instalação
+## Instalação (recomendado: pelo VPK)
 
-Testado para firmware **3.65 com Ensō (HENkaku)**.
+Testado para firmware **3.65 com Ensō (HENkaku)**. Precisa de "Enable Unsafe Homebrew" ativado nas HENkaku Settings.
 
-1. Baixe o `combo_peel.skprx` na aba **Actions** deste repositório
-   (abra a execução mais recente com ✓ verde e baixe o artefato **ComboPeel**; ele vem dentro de um .zip).
-2. Com o VitaShell, copie `combo_peel.skprx` para `ur0:tai/`.
-3. Edite `ur0:tai/config.txt` e adicione esta linha logo abaixo de `*KERNEL`:
+1. Baixe o artefato **ComboPeel** na aba **Actions** (execução mais recente com ✓ verde). Dentro do .zip está o `ComboPeel.vpk`.
+2. Copie o `ComboPeel.vpk` para o cartão e instale pelo VitaShell (X no arquivo › Install).
+3. Abra o app **ComboPeel** e aperte **X (Instalar)**. Ele:
+   - copia o plugin para `ur0:tai/combo_peel.skprx`;
+   - faz backup do `config.txt` (`config.txt.bak`);
+   - adiciona a linha na seção `*KERNEL`, sem duplicar.
+4. Aperte **SELECT** para reiniciar.
+5. Pode apagar a bolha do ComboPeel: o plugin continua instalado.
 
-   ```
-   *KERNEL
-   ur0:tai/combo_peel.skprx
-   ```
+Para remover o plugin: instale o VPK de novo, abra e aperte **Triângulo (Desinstalar)**.
 
-   > Se existir também `ux0:tai/config.txt`, é esse que o Vita usa. Edite o que estiver ativo.
+### Instalação manual
 
-4. Reinicie o Vita.
+1. Copie `combo_peel.skprx` para `ur0:tai/` (pelo VitaShell).
+2. No `ur0:tai/config.txt`, adicione `ur0:tai/combo_peel.skprx` na seção `*KERNEL`.
+3. Reinicie.
 
 ## Se algo der errado
 
