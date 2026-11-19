@@ -1,6 +1,6 @@
 ## ComboPeel v1.1
 
-Desbloqueia a tela de bloqueio do PS Vita com **analógico esquerdo para baixo + X**, com a mesma animação de "descascar" do gesto com o dedo.
+Plugin de kernel (taiHEN) de qualidade de vida para PS Vita: desbloqueia a tela de bloqueio com **analógico esquerdo para baixo + X**, com a mesma animação de "descascar" do gesto com o dedo.
 
 ### Instalação
 1. Baixe o `ComboPeel.vpk` abaixo e instale pelo VitaShell.

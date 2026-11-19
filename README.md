@@ -1,7 +1,9 @@
 # ComboPeel (PS Vita)
 
-Plugin de kernel para PS Vita que desbloqueia a tela de bloqueio com um combo de botões,
-com a mesma animação de "descascar" (peel) do gesto com o dedo.
+Plugin de kernel (taiHEN) para PS Vita, do tipo **qualidade de vida (QoL)**: desbloqueia a tela de
+bloqueio com um combo de botões, com a mesma animação de "descascar" (peel) do gesto com o dedo.
+
+É um homebrew: requer o Vita desbloqueado com HENkaku/Ensō.
 
 **Combo:** analógico esquerdo para baixo + X
 
